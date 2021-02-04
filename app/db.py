@@ -30,11 +30,12 @@ def todo_parser(todo) -> dict:
 # Crud Methods for the DB
 # Retrieve all todo present in the database
 async def get_todo_list():
-    todo = []
+    #this append needs to be fixed
+    todoList = []
     async for todo in todo_collection.find():
-        todo.append(todo_parser(todo))
-    return todo
-
+        temp = todo_parser(todo)
+        todoList.append(temp)
+    return todoList
 
 # Add a new todo into to the database
 async def add_todo(todo_data: dict) -> dict:
