@@ -6,3 +6,5 @@ PyJWT~=2.0.1
 pydantic~=1.7.3
 uvicorn~=0.13.3
 dnspython~=2.1.0
+pydantic[email]~=1.7.3
+pymongo[srv]~=3.11.2
