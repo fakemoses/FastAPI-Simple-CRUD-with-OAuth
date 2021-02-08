@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends, WebSocket, WebSocketDisconnect
 from fastapi.encoders import jsonable_encoder
 
 # perform all the db actions
@@ -10,6 +10,7 @@ from app.db import (
     get_todo_list
 )
 # data models are defined here
+from auth.auth_bearer import JWTBearer
 from models.models import (
     ResponseModel,
     ErrorResponseModel,
@@ -19,9 +20,8 @@ from models.models import (
 
 router = APIRouter()
 
-
 # create
-@router.post("/", response_description="Todo data added into the database")
+@router.post("/",dependencies=[Depends(JWTBearer())], response_description="Todo data added into the database")
 async def add_todo_data(todo: TodoSchema = Body(...)):
     todo = jsonable_encoder(todo)
     new_todo = await add_todo(todo)
@@ -47,7 +47,7 @@ async def get_todoList_data(id):
 
 
 # update
-@router.put("/{id}")
+@router.put("/{id}",dependencies=[Depends(JWTBearer())])
 async def update_todo_data(id: str, req: UpdateTodoModel = Body(...)):
     # way to remove keys in dictionary with None values in Python
     req = {k: v for k, v in req.dict().items() if v is not None}
@@ -60,7 +60,7 @@ async def update_todo_data(id: str, req: UpdateTodoModel = Body(...)):
     return ErrorResponseModel("An error occurred", 404, "There was an error updating the data.")
 
 
-@router.delete("/{id}", response_description="Todo data deleted from the database")
+@router.delete("/{id}",dependencies=[Depends(JWTBearer())], response_description="Todo data deleted from the database")
 async def delete_data(id: str):
     deleted_list = await delete_todo(id)
     if deleted_list:
