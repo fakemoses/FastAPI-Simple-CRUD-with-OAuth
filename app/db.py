@@ -2,6 +2,7 @@ import motor.motor_asyncio
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
 import os
+import bcrypt
 
 load_dotenv()
 
@@ -78,6 +79,7 @@ async def delete_todo(id: str):
 async def get_user(email: str, password: str):
     # need to hash the password
     user = await user_collection.find_one({"email": email, "password": password})
-    if user:
+    checkPass = await bcrypt.checkpw(password, user.password)
+    if user and checkPass:
         return True
     return False
