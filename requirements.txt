@@ -6,3 +6,4 @@ PyJWT~=2.0.1
 pydantic[email]
 uvicorn~=0.13.3
 dnspython~=2.1.0
+bcrypt~=3.2.0
